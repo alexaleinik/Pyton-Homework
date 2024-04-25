@@ -1,0 +1,59 @@
+def read_contacts(filename):
+    contacts = []
+    with open(filename, 'r') as file:
+        for line in file:
+            contact = line.strip().split(',')
+            contacts.append(contact)
+    return contacts
+
+def write_contacts(filename, contacts):
+    with open(filename, 'w') as file:
+        for contact in contacts:
+            file.write(','.join(contact) + '\n')
+
+def display_contacts(contacts):
+    for contact in contacts:
+        print("Фамилия: {}, Имя: {}, Отчество: {}, Телефон: {}".format(*contact))
+
+def search_contact(contacts, key):
+    found_contacts = [contact for contact in contacts if any(key.lower() in info.lower() for info in contact)]
+    return found_contacts
+
+def main():
+    filename = "contacts.txt"
+    contacts = read_contacts(filename)
+    
+    while True:
+        print("\nМеню:")
+        print("1. Вывести контакты")
+        print("2. Добавить контакт")
+        print("3. Найти контакт")
+        print("4. Экспорт контактов в файл")
+        print("5. Выход")
+        
+        choice = input("Выберите действие: ")
+        
+        if choice == '1':
+            display_contacts(contacts)
+        elif choice == '2':
+            new_contact = input("Введите данные о новом контакте (Фамилия, Имя, Отчество, Телефон), разделяя их запятой: ").split(',')
+            contacts.append(new_contact)
+        elif choice == '3':
+            key = input("Введите фамилию, имя, отчество или номер телефона для поиска: ")
+            found_contacts = search_contact(contacts, key)
+            if found_contacts:
+                print("Найденные контакты:")
+                display_contacts(found_contacts)
+            else:
+                print("Контакт не найден.")
+        elif choice == '4':
+            write_contacts(filename, contacts)
+            print("Контакты успешно экспортированы в файл.")
+        elif choice == '5':
+            print("Выход из программы.")
+            break
+        else:
+            print("Некорректный ввод. Пожалуйста, выберите действие из меню.")
+
+if __name__ == "__main__":
+    main()
